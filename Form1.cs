@@ -39,13 +39,16 @@ namespace DataMatrixCV
             camera = new Thread(new ThreadStart(CaptureCameraCallback));
             camera.Start();
         }
-
         private void CaptureCameraCallback()
         {
             frame = new Mat();
             capture = new VideoCapture(0);
-            capture.AutoFocus = true;
-            capture.Open(0);
+            capture.AutoFocus = false;
+            capture.Open(1);
+            capture.Exposure = -4;
+            capture.Contrast = 128;
+            capture.Brightness = 128;
+            capture.Focus = 100;
             BReader.AutoRotate = true;
             BReader.Options.PossibleFormats = new BarcodeFormat[] { BarcodeFormat.DATA_MATRIX };
 
@@ -54,7 +57,7 @@ namespace DataMatrixCV
                 while (isCameraRunning)
                 {
                     capture.Read(frame);
-
+                    
                     //byte[] intArray = ImageToByte(image);
                     //LuminanceSource lumSource = new RGBLuminanceSource(intArray, image.Width, image.Height);
                     //BinaryBitmap operableImage = new BinaryBitmap(new HybridBinarizer(lumSource));
@@ -78,6 +81,7 @@ namespace DataMatrixCV
                         //}
                         //catch { }
                         //MessageBox.Show($"Data matrix found: {result}", "Decoded data matrix");
+
                     }
 
                     image = BitmapConverter.ToBitmap(frame);
@@ -95,6 +99,8 @@ namespace DataMatrixCV
             CaptureCamera();
             buttonStart.Text = "End capture";
             isCameraRunning = true;
+            buttonImage.Enabled = true;
+            buttonAdvanced.Enabled = true;
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -106,6 +112,7 @@ namespace DataMatrixCV
                 buttonStart.Text = "Begin capture";
                 labelRectangleCoordinates.Text = "";
                 labelDMData.Text = "";
+                
                 pictureBox1.Image.Dispose();
                 pictureBox1.Image = null;
             }
@@ -155,5 +162,80 @@ namespace DataMatrixCV
             StaticImage staticImageDialog = new StaticImage();
             staticImageDialog.Show();
         }
+
+        private void buttonAdvanced_Click(object sender, EventArgs e)
+        {
+            if (panelAdvanced.Visible)
+            {
+                panelAdvanced.Visible = false;
+                this.Height = 498;
+            }
+            else
+            {
+                this.Height =710;
+                panelAdvanced.Visible = true;
+                if (capture != null)
+                {
+                    trackBarExposure.Value = (int)capture.Exposure;
+                    labelExposureNum.Text = trackBarExposure.Value.ToString();
+                    trackBarContrast.Value = (int)capture.Contrast;
+                    labelContrastNum.Text = trackBarContrast.Value.ToString();
+                    trackBarBrightness.Value = (int)capture.Brightness;
+                    labelBrightnessNum.Text = trackBarBrightness.Value.ToString();
+                }
+            }
+            
+        }
+
+        private void trackBarExposure_Scroll(object sender, EventArgs e)
+        {
+            capture.Exposure = trackBarExposure.Value;
+            labelExposureNum.Text = trackBarExposure.Value.ToString();
+        }
+
+        private void trackBarContrast_Scroll(object sender, EventArgs e)
+        {
+            capture.Contrast = trackBarContrast.Value;
+            labelContrastNum.Text = trackBarContrast.Value.ToString();
+        }
+
+        private void trackBarBrightness_Scroll(object sender, EventArgs e)
+        {
+            capture.Brightness = trackBarBrightness.Value;
+            labelBrightnessNum.Text = trackBarBrightness.Value.ToString();
+        }
+        private void trackBarFocus_Scroll(object sender, EventArgs e)
+        {
+            capture.Focus = trackBarFocus.Value;
+            labelFocusNum.Text = trackBarFocus.Value.ToString();
+        }
+
+        private void labelExposure_DoubleClick(object sender, EventArgs e)
+        {
+            trackBarExposure.Value = -4; 
+            capture.Exposure = trackBarExposure.Value;
+            labelExposureNum.Text = trackBarExposure.Value.ToString();
+        }
+
+        private void labelContrast_DoubleClick(object sender, EventArgs e)
+        {
+            trackBarContrast.Value = 128;
+            capture.Contrast = trackBarContrast.Value;
+            labelContrastNum.Text = trackBarContrast.Value.ToString();
+        }
+
+        private void labelBrightness_DoubleClick(object sender, EventArgs e)
+        {
+            trackBarBrightness.Value = 128;
+            capture.Brightness = trackBarBrightness.Value;
+            labelBrightnessNum.Text = trackBarBrightness.Value.ToString();
+        }
+        private void labelFocus_DoubleClick(object sender, EventArgs e)
+        {
+            trackBarFocus.Value = 128;
+            capture.Focus = trackBarFocus.Value;
+            labelFocusNum.Text = trackBarFocus.Value.ToString();
+        }
+
     }
 }

@@ -32,6 +32,7 @@
             this.buttonStart = new System.Windows.Forms.Button();
             this.labelRectangleCoordinates = new System.Windows.Forms.Label();
             this.labelDMData = new System.Windows.Forms.Label();
+            this.buttonImage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,11 +73,22 @@
             this.labelDMData.TabIndex = 3;
             this.labelDMData.Text = "None";
             // 
+            // buttonImage
+            // 
+            this.buttonImage.Location = new System.Drawing.Point(664, 414);
+            this.buttonImage.Name = "buttonImage";
+            this.buttonImage.Size = new System.Drawing.Size(32, 24);
+            this.buttonImage.TabIndex = 4;
+            this.buttonImage.Text = "img";
+            this.buttonImage.UseVisualStyleBackColor = true;
+            this.buttonImage.Click += new System.EventHandler(this.buttonImage_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 450);
+            this.Controls.Add(this.buttonImage);
             this.Controls.Add(this.labelDMData);
             this.Controls.Add(this.labelRectangleCoordinates);
             this.Controls.Add(this.buttonStart);
@@ -95,6 +107,7 @@
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Label labelRectangleCoordinates;
         private System.Windows.Forms.Label labelDMData;
+        private System.Windows.Forms.Button buttonImage;
     }
 }
 

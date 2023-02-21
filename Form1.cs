@@ -16,6 +16,7 @@ using OpenCvSharp.Extensions;
 using ZXing;
 using ZXing.Common;
 using ZXing.Datamatrix;
+using Point = OpenCvSharp.Point;
 
 namespace DataMatrixCV
 {
@@ -63,6 +64,7 @@ namespace DataMatrixCV
                     //BinaryBitmap operableImage = new BinaryBitmap(new HybridBinarizer(lumSource));
                     //var result = DReader.decode(operableImage);
 
+                    
                     Bitmap operableImage = (Bitmap)image.Clone();
                     var result = BReader.Decode(operableImage);
                     if (result != null)
@@ -138,6 +140,14 @@ namespace DataMatrixCV
                 img.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
                 return stream.ToArray();
             }
+        }
+
+        private void buttonImage_Click(object sender, EventArgs e)
+        {
+            isCameraRunning = false;
+            capture.Release();
+            StaticImage staticImageDialog = new StaticImage();
+            staticImageDialog.Show();
         }
     }
 }

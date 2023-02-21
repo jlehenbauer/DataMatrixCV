@@ -35,14 +35,14 @@ namespace DataMatrixCV
                 // Load the image
                 Mat image = Cv2.ImRead(openFileDialog.FileName, ImreadModes.Color);
 
-                // Resize the image
-                if (image.Width > 1000 || image.Height > 1000)
-                {
-                    Size size = new Size(image.Width / 10, image.Height / 10);
-                    Mat resized = new Mat();
-                    Cv2.Resize(image, resized, size);
-                    image = resized;
-                }
+                //// Resize the image
+                //if (image.Width > 1000 || image.Height > 1000)
+                //{
+                //    Size size = new Size(image.Width / 10, image.Height / 10);
+                //    Mat resized = new Mat();
+                //    Cv2.Resize(image, resized, size);
+                //    image = resized;
+                //}
 
 
                 // Convert the image to grayscale

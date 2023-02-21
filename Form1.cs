@@ -46,42 +46,46 @@ namespace DataMatrixCV
             capture = new VideoCapture(0);
             capture.AutoFocus = true;
             capture.Open(0);
+            BReader.AutoRotate = true;
+            BReader.Options.PossibleFormats = new BarcodeFormat[] { BarcodeFormat.DATA_MATRIX };
 
             if (capture.IsOpened())
             {
                 while (isCameraRunning)
                 {
                     capture.Read(frame);
+
+                    //byte[] intArray = ImageToByte(image);
+                    //LuminanceSource lumSource = new RGBLuminanceSource(intArray, image.Width, image.Height);
+                    //BinaryBitmap operableImage = new BinaryBitmap(new HybridBinarizer(lumSource));
+                    //var result = DReader.decode(operableImage);
+                    
+                    Bitmap operableImage = BitmapConverter.ToBitmap(frame);
+                    var result = BReader.Decode(operableImage);
+                    if (result != null)
+                    {
+                        coord = $"({result.ResultPoints[1].X}, {result.ResultPoints[1].Y})"; 
+                        Point[] points = Array.ConvertAll(result.ResultPoints, point => new Point(point.X, point.Y));
+                        label = result.Text;
+                        Cv2.Polylines(frame, new Point[][] {points}, true, Scalar.LimeGreen,  2);
+                        //try
+                        //{
+                        //    rectangle = new System.Drawing.Rectangle(
+                        //        (int) result.ResultPoints[1].X, 
+                        //        (int) result.ResultPoints[0].Y,
+                        //        (int) (result.ResultPoints[2].X - result.ResultPoints[0].X),
+                        //        (int) (result.ResultPoints[2].Y - result.ResultPoints[0].Y));
+                        //}
+                        //catch { }
+                        //MessageBox.Show($"Data matrix found: {result}", "Decoded data matrix");
+                    }
+
                     image = BitmapConverter.ToBitmap(frame);
                     if (pictureBox1.Image != null)
                     {
                         pictureBox1.Image.Dispose();
                     }
-
                     pictureBox1.Image = image;
-                    //byte[] intArray = ImageToByte(image);
-                    //LuminanceSource lumSource = new RGBLuminanceSource(intArray, image.Width, image.Height);
-                    //BinaryBitmap operableImage = new BinaryBitmap(new HybridBinarizer(lumSource));
-                    //var result = DReader.decode(operableImage);
-
-                    
-                    Bitmap operableImage = (Bitmap)image.Clone();
-                    var result = BReader.Decode(operableImage);
-                    if (result != null)
-                    {
-                        coord = $"({result.ResultPoints[1].X}, {result.ResultPoints[1].Y})";
-                        label = result.Text;
-                        try
-                        {
-                            rectangle = new System.Drawing.Rectangle(
-                                (int) result.ResultPoints[1].X, 
-                                pictureBox1.Image.Height - (int) result.ResultPoints[1].Y,
-                                (int) (result.ResultPoints[2].X - result.ResultPoints[0].X),
-                                (int) (result.ResultPoints[2].Y - result.ResultPoints[0].Y));
-                        }
-                        catch { }
-                        //MessageBox.Show($"Data matrix found: {result}", "Decoded data matrix");
-                    }
                 }
             }
         }
@@ -102,6 +106,8 @@ namespace DataMatrixCV
                 buttonStart.Text = "Begin capture";
                 labelRectangleCoordinates.Text = "";
                 labelDMData.Text = "";
+                pictureBox1.Image.Dispose();
+                pictureBox1.Image = null;
             }
             else
             {
@@ -113,10 +119,10 @@ namespace DataMatrixCV
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            using (Pen pen = new Pen(Color.LimeGreen, 2))
-            {
-                e.Graphics.DrawRectangle(pen, rectangle);
-            }
+            //using (Pen pen = new Pen(Color.LimeGreen, 2))
+            //{
+            //    e.Graphics.DrawRectangle(pen, rectangle);
+            //}
             labelRectangleCoordinates.Text = coord;
             labelDMData.Text = label;
         }

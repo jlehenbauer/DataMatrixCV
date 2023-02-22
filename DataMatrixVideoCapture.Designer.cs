@@ -1,6 +1,6 @@
 ﻿namespace DataMatrixCV
 {
-    partial class Form1
+    partial class DataMatrixVideoCapture
     {
         /// <summary>
         /// Required designer variable.
@@ -274,7 +274,7 @@
             this.labelScanned.TabIndex = 14;
             this.labelScanned.Text = "Scanned: ";
             // 
-            // Form1
+            // DataMatrixVideoCapture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -288,8 +288,8 @@
             this.Controls.Add(this.labelRectangleCoordinates);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "Form1";
-            this.Text = "Data Matrix Capture";
+            this.Name = "DataMatrixVideoCapture";
+            this.Text = "Data Matrix Video Capture";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposure)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarContrast)).EndInit();

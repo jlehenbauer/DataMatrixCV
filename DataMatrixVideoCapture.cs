@@ -21,7 +21,7 @@ using Point = OpenCvSharp.Point;
 
 namespace DataMatrixCV
 {
-    public partial class Form1 : Form
+    public partial class DataMatrixVideoCapture : Form
     {
         // variables for video capture
         private VideoCapture capture;
@@ -84,7 +84,7 @@ namespace DataMatrixCV
                 }
             }
         }
-        public Form1()
+        public DataMatrixVideoCapture()
         {
             InitializeComponent();
             CaptureCamera();

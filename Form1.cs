@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.Internal.Vectors;
 using ZXing;
 using ZXing.Common;
 using ZXing.Datamatrix;
@@ -34,6 +35,7 @@ namespace DataMatrixCV
         private string coord;
         private string label;
         private ImageConverter converter = new ImageConverter();
+        private HashSet<string> scanned = new HashSet<string>();
         private void CaptureCamera()
         {
             camera = new Thread(new ThreadStart(CaptureCameraCallback));
@@ -66,6 +68,11 @@ namespace DataMatrixCV
                         Point[] points = Array.ConvertAll(result.ResultPoints, point => new Point(point.X, point.Y));
                         label = result.Text;
                         Cv2.Polylines(frame, new Point[][] {points}, true, Scalar.LimeGreen,  2);
+                        scanned.Add(result.Text);
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            labelNumScanned.Text = scanned.Count.ToString();
+                        });
                     }
 
                     image = BitmapConverter.ToBitmap(frame);
@@ -96,7 +103,7 @@ namespace DataMatrixCV
                 buttonStart.Text = "Begin capture";
                 labelRectangleCoordinates.Text = "";
                 labelDMData.Text = "";
-                
+                SaveScansToFile();
                 pictureBox1.Image.Dispose();
                 pictureBox1.Image = null;
             }
@@ -105,6 +112,8 @@ namespace DataMatrixCV
                 CaptureCamera();
                 buttonStart.Text = "End capture";
                 isCameraRunning = true;
+                scanned = new HashSet<string>();
+                labelNumScanned.Text = scanned.Count.ToString();
             }
         }
 
@@ -162,9 +171,64 @@ namespace DataMatrixCV
                     labelContrastNum.Text = trackBarContrast.Value.ToString();
                     trackBarBrightness.Value = (int)capture.Brightness;
                     labelBrightnessNum.Text = trackBarBrightness.Value.ToString();
+                    trackBarFocus.Value = (int)capture.Focus;
+                    labelFocusNum.Text = trackBarFocus.Value.ToString();
                 }
             }
-            
+        }
+
+        private void SaveScansToFile()
+        {
+            if (scanned.Count > 0)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "CSV (*.csv)|*.csv";
+                sfd.FileName = $"{DateTime.Now.ToString("MM_dd_yyyy-hh.mm.ss")} PCBA SN Auto Scan Complete.csv";
+                bool fileError = false;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (File.Exists(sfd.FileName))
+                    {
+                        try
+                        {
+                            File.Delete(sfd.FileName);
+                        }
+                        catch (IOException ex)
+                        {
+                            fileError = true;
+                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+                        }
+                    }
+                    if (!fileError)
+                    {
+                        try
+                        {
+                            int columnCount = 1;
+                            string columnNames = "Serial Numbers";
+                            string[] outputCsv = new string[scanned.Count + 1];
+                            outputCsv[0] += columnNames;
+                            int i = 1;
+
+                            foreach (string sn in scanned)
+                            {
+                                outputCsv[i] = sn;
+                                i++;
+                            }
+
+                            File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
+                            MessageBox.Show($"Data exported successfully to {sfd.FileName}", "Export complete.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error :" + ex.Message);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Record To Export !!!", "Info");
+            }
         }
 
         private void trackBarExposure_Scroll(object sender, EventArgs e)

@@ -47,6 +47,8 @@
             this.labelBrightnessNum = new System.Windows.Forms.Label();
             this.labelContrastNum = new System.Windows.Forms.Label();
             this.labelExposureNum = new System.Windows.Forms.Label();
+            this.labelNumScanned = new System.Windows.Forms.Label();
+            this.labelScanned = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposure)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarContrast)).BeginInit();
@@ -254,11 +256,31 @@
             this.labelExposureNum.TabIndex = 12;
             this.labelExposureNum.Text = "label1";
             // 
+            // labelNumScanned
+            // 
+            this.labelNumScanned.AutoSize = true;
+            this.labelNumScanned.Location = new System.Drawing.Point(514, 410);
+            this.labelNumScanned.Name = "labelNumScanned";
+            this.labelNumScanned.Size = new System.Drawing.Size(13, 13);
+            this.labelNumScanned.TabIndex = 13;
+            this.labelNumScanned.Text = "0";
+            // 
+            // labelScanned
+            // 
+            this.labelScanned.AutoSize = true;
+            this.labelScanned.Location = new System.Drawing.Point(452, 410);
+            this.labelScanned.Name = "labelScanned";
+            this.labelScanned.Size = new System.Drawing.Size(56, 13);
+            this.labelScanned.TabIndex = 14;
+            this.labelScanned.Text = "Scanned: ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 456);
+            this.Controls.Add(this.labelScanned);
+            this.Controls.Add(this.labelNumScanned);
             this.Controls.Add(this.panelAdvanced);
             this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.buttonImage);
@@ -301,6 +323,8 @@
         private System.Windows.Forms.Label labelFocusNum;
         private System.Windows.Forms.Label labelFocus;
         private System.Windows.Forms.TrackBar trackBarFocus;
+        private System.Windows.Forms.Label labelNumScanned;
+        private System.Windows.Forms.Label labelScanned;
     }
 }
 

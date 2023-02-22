@@ -46,8 +46,8 @@ namespace DataMatrixCV
             capture.AutoFocus = false;
             capture.Open(1);
             capture.Exposure = -4;
-            capture.Contrast = 128;
-            capture.Brightness = 128;
+            capture.Contrast = 0;
+            capture.Brightness = 256;
             capture.Focus = 100;
             BReader.AutoRotate = true;
             BReader.Options.PossibleFormats = new BarcodeFormat[] { BarcodeFormat.DATA_MATRIX };
@@ -58,11 +58,6 @@ namespace DataMatrixCV
                 {
                     capture.Read(frame);
                     
-                    //byte[] intArray = ImageToByte(image);
-                    //LuminanceSource lumSource = new RGBLuminanceSource(intArray, image.Width, image.Height);
-                    //BinaryBitmap operableImage = new BinaryBitmap(new HybridBinarizer(lumSource));
-                    //var result = DReader.decode(operableImage);
-                    
                     Bitmap operableImage = BitmapConverter.ToBitmap(frame);
                     var result = BReader.Decode(operableImage);
                     if (result != null)
@@ -71,17 +66,6 @@ namespace DataMatrixCV
                         Point[] points = Array.ConvertAll(result.ResultPoints, point => new Point(point.X, point.Y));
                         label = result.Text;
                         Cv2.Polylines(frame, new Point[][] {points}, true, Scalar.LimeGreen,  2);
-                        //try
-                        //{
-                        //    rectangle = new System.Drawing.Rectangle(
-                        //        (int) result.ResultPoints[1].X, 
-                        //        (int) result.ResultPoints[0].Y,
-                        //        (int) (result.ResultPoints[2].X - result.ResultPoints[0].X),
-                        //        (int) (result.ResultPoints[2].Y - result.ResultPoints[0].Y));
-                        //}
-                        //catch { }
-                        //MessageBox.Show($"Data matrix found: {result}", "Decoded data matrix");
-
                     }
 
                     image = BitmapConverter.ToBitmap(frame);
@@ -126,10 +110,6 @@ namespace DataMatrixCV
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
-            //using (Pen pen = new Pen(Color.LimeGreen, 2))
-            //{
-            //    e.Graphics.DrawRectangle(pen, rectangle);
-            //}
             labelRectangleCoordinates.Text = coord;
             labelDMData.Text = label;
         }
